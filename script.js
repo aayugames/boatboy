@@ -5,6 +5,7 @@ const finishLine = document.getElementById('finish-line');
 let boatPosition = 50;
 let gameStarted = false;
 let countdown = 3;
+let gameInterval;
 
 // Move boat left and right
 document.addEventListener('keydown', (e) => {
@@ -27,6 +28,7 @@ function startGame() {
   } else {
     countdownElement.style.display = 'none';
     gameStarted = true;
+    gameInterval = setInterval(updateGame, 20);
     moveObstacles();
   }
 }
@@ -64,8 +66,16 @@ function moveObstacles() {
   }
 }
 
+// Update game state
+function updateGame() {
+  if (boatPosition >= 75) {
+    endGame(true);
+  }
+}
+
 // End game logic
 function endGame(success) {
+  clearInterval(gameInterval);
   gameStarted = false;
   if (success) {
     messageElement.textContent = 'HAPPY BIRTHDAY CHAMP! I LOVE YOU.';
@@ -85,6 +95,7 @@ function resetGame() {
   boat.style.left = '50%';
   countdown = 3;
   countdownElement.style.display = 'block';
+  document.querySelectorAll('.obstacle').forEach(obstacle => obstacle.remove());
   startGame();
 }
 
